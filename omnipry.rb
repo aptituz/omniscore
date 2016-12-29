@@ -2,6 +2,7 @@
 
 require 'rubygems'
 require 'pry'
+require 'json'
 require "rubyfocus"
 
 class Score
@@ -57,7 +58,7 @@ class ScoringRules
 
   def load_rules
     @rules =<<EOT
-score(1)
+score(1).when(true)
 
 score(2).when  name_contains 'Spülmaschine'
 score(10).when name_contains 'wasch'
@@ -100,19 +101,23 @@ class OmniScore
     rule = ScoringRules.new
     rule.run_rules(completed_tasks)
     scoreboard = build_scoreboard
+    File.open('scoreboard.json', 'w') { |f| f.write scoreboard.to_json }
 
-    binding.pry
   end
 
   def build_scoreboard
-    scoreboard = Hash.new
+    scoreboard = { :by_date => {}, :highscore => 0 }
     @@scores.each do |task_id, score|
       completion_date = task_by_id(task_id).completed.to_date
-      scoreboard[completion_date] ||= 0
-      scoreboard[completion_date] += score
+      scoreboard[:by_date][completion_date] ||= 0
+      scoreboard[:by_date][completion_date] += score
+
 
       puts "Task #{task_id} completed on #{completion_date}"
     end
+    scoreboard[:day_scores] = scoreboard[:by_date].sort_by { |date,score| date }.map { |date, score| [date.day,score] }
+    scoreboard[:highscore] = scoreboard[:by_date].map { |date,score| score }.max
+
     scoreboard
   end
 
