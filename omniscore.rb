@@ -24,9 +24,10 @@ end
 class ScoringRules
   attr_reader :score
   attr_accessor :task
+  attr_accessor :rulefile
 
-  def initialize
-    load_rules
+  def initialize(rulefile)
+    load_rules(rulefile)
   end
 
   def in_project(name)
@@ -56,24 +57,17 @@ class ScoringRules
   end
 
 
-  def load_rules
-    @rules =<<EOT
-score(1).when(true)
-
-score(2).when  name_contains 'Spülmaschine'
-score(10).when name_contains 'wasch'
-score(10).when in_project 'Hausarbeit'
-EOT
+  def load_rules(rulefile)
+    puts "Loading rules from #{rulefile}"
+    @rules = File.read(rulefile)
   end
 
   def run_rules(tasks)
+    # FIXME: Rules should run against subtasks, too
     tasks.each do |task|
       @task = task
-      #puts "Running rules against '#{task.name}"
       instance_eval(@rules)
     end
-
-    #puts "Score is: " + score.to_s
   end
 end
 
@@ -87,6 +81,14 @@ class OmniScore
     @document ||= OmniScore.omnifocus_document
   end
 
+  def rulefile
+    'rules.rb'
+  end
+
+  def outfile
+    'scoreboard.json'
+  end
+
   def completed_tasks
     document.tasks.select(completed?: true).select do |task|
       task.completed.to_date >= (Date.today - 30)
@@ -98,10 +100,11 @@ class OmniScore
   end
 
   def run
-    rule = ScoringRules.new
+    rule = ScoringRules.new(rulefile)
     rule.run_rules(completed_tasks)
     scoreboard = build_scoreboard
-    File.open('scoreboard.json', 'w') { |f| f.write scoreboard.to_json }
+    File.open(outfile, 'w') { |f| f.write scoreboard.to_json }
+    puts "Written scoreboard to #{outfile}."
 
   end
 
@@ -111,13 +114,11 @@ class OmniScore
       completion_date = task_by_id(task_id).completed.to_date
       scoreboard[:by_date][completion_date] ||= 0
       scoreboard[:by_date][completion_date] += score
-
-
-      puts "Task #{task_id} completed on #{completion_date}"
     end
     scoreboard[:day_scores] = scoreboard[:by_date].sort_by { |date,score| date }.map { |date, score| [date.day,score] }
     scoreboard[:highscore] = scoreboard[:by_date].map { |date,score| score }.max
 
+    puts "Highscore: #{scoreboard[:highscore]}"
     scoreboard
   end
 
