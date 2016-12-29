@@ -1,0 +1,23 @@
+{
+  "name": "omniscore",
+  "authors": [
+    "Patrick Schoenfeld <patrick.schoenfeld@credativ.de>"
+  ],
+  "description": "scoring board for completed omnifocus tasks",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jqplot": "*",
+    "jquery": "^3.1.1",
+    "DateJS": "datejs#^1.0.0-rc3"
+  }
+}

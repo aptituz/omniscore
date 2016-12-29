@@ -1,0 +1,122 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+    <title>omniscore</title>
+
+    <script type="text/javascript" src="bower_components/DateJS/build/date.js"></script>
+    <script type="text/javascript" src="bower_components/jqplot/jquery.min.js"></script>
+    <script type="text/javascript" src="bower_components/jqplot/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="bower_components/jqplot/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="bower_components/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+    <script type="text/javascript" src="bower_components/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+    <script type="text/javascript" src="bower_components/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="bower_components/jqplot/plugins/jqplot.pointLabels.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="bower_components/jqplot/jquery.jqplot.min.css" />
+
+    <style>
+        body {
+            font-family: 'Trebuchet MS';
+            color: #80bfff;
+            text-align: center;
+        }
+
+        h1 {
+            color: #0066cc;
+        }
+        #highscore {
+            display: inline-block;
+            min-width: 400px;
+            margin-top: 100px;
+            margin-left: 50px;
+        }
+
+        #day_score {
+            display: inline-block;
+            min-width: 400px;
+            margin-top: 100px;
+            margin-left: 50px;
+        }
+        .score {
+            font-size: 72pt;
+            align: center;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Omnifocus Scorecard</h1>
+<div "scorebox">
+<div id="day_score" style="min-width:400px;"></div>
+<div id="highscore" style="min-width:400px;">&nbsp;</div>
+</div>
+
+<div id="score_by_days" style="height:400px;min-width:800px;"></div>
+
+
+</body>
+<script>
+    function getThirtyDays(data) {
+
+        alert(data)
+
+    }
+    $(document).ready(function() {
+        $.jqplot.config.enablePlugins = true;
+
+        $.jqplot.config.enablePlugins = true;
+        $.ajax({
+                url: 'scoreboard.json',
+                dataType: 'json',
+                async: false,
+                success: function(json) {
+                    score_data = json;
+
+                }
+        })
+
+        var axisScores = [];
+        var axisDates  = [];
+
+        var today = Date.today().toString('yyyy-MM-dd');
+        var todays_score = score_data.by_date[today];
+        var highscore    = score_data.highscore;
+        $('#day_score').append('Todays score<br><span class="score">' + todays_score + '</span>');
+
+        $('#highscore').append('High score<br><span class="score">' + highscore + '</span>');
+
+
+
+
+        var plot2 = $.jqplot('score_by_days', [score_data.day_scores], {
+            title: 'Score by days',
+            seriesDefaults:{
+                renderer: $.jqplot.BarRenderer,
+                rendererOptions: {
+                    barDirection: 'vertical',
+                },
+                pointLabels: { show: true }
+            },
+            axes: {
+                xaxis: {
+                    renderer:  $.jqplot.CategoryAxisRenderer,
+                },
+                yaxis: {
+                    tickOptions: {
+                        formatString: '%d'
+                    }
+                }
+            },
+            highlighter: {
+                sizeAdjust: 7.5
+            },
+            cursor: {
+                show: true
+            }
+        });
+    });
+
+</script>
+</html>
