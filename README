@@ -1,0 +1,7 @@
+Make omnifocus fun! ;-D
+
+This is a prototype of a ruby script which allows scoring done tasks in
+omnifocus to arbitrary rules and export it as json for a javascript application
+to consume and render a scoreboard.
+
+Very, very alpha piece of software. Hacked together in a morning.
