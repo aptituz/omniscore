@@ -12,6 +12,11 @@ class Omniscore
       @total_score  = 0
     end
 
+    def add_score(amount)
+      @day_score    += amount
+      @total_score  += amount
+    end
+
     def highscore
       @highscore ||= day_scores.map { |date,score| score }.max
     end

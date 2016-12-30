@@ -5,11 +5,13 @@ class Omniscore
     include Omniscore::Matchers
 
     attr_accessor :activity_rules
+    attr_accessor :streak_rules
     attr_accessor :total_score
     attr_accessor :score
 
     def initialize
       @activity_rules = {}
+      @streak_rules   = {}
       @total_score    = 0
       @score          = 0
     end
@@ -21,9 +23,12 @@ class Omniscore
     def add_score(amount, options = {})
       match = (options.has_key?(:if)) ? options[:if].match? : true
       if match
-        scoreboard.day_score    += amount
-        scoreboard.total_score  += amount
+        scoreboard.add_score(amount)
       end
+    end
+
+    def define_streak(options)
+      @streak_rules[options[:days]] = options[:score]
     end
 
     def on_added_task(&block)

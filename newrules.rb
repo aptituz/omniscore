@@ -26,3 +26,8 @@ end
 on_reviewed_project do |project|
   add_score 2
 end
+
+define_streak :days => 3,   :score => 1
+define_streak :days => 5,   :score => 2
+define_streak :days => 10,  :score => 10
+define_streak :days => 20,  :score => 50
