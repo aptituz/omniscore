@@ -28,15 +28,21 @@
         }
         #highscore {
             display: inline-block;
-            min-width: 400px;
+            min-width: 200px;
             margin-top: 100px;
             margin-left: 50px;
             margin-bottom: 50px;
         }
+        #total_score {
+            display: inline-block;
+            min-width: 200px;
+            margin-top: 100px;
+            margin-left: 50px;
+        }
 
         #day_score {
             display: inline-block;
-            min-width: 400px;
+            min-width: 200px;
             margin-top: 100px;
             margin-left: 50px;
         }
@@ -50,6 +56,7 @@
 <body>
 <h1>Omnifocus Scorecard</h1>
 <div "scorebox">
+<div id="total_score" style="min-width:400px;"></div>
 <div id="day_score" style="min-width:400px;"></div>
 <div id="highscore" style="min-width:400px;">&nbsp;</div>
 </div>
@@ -84,6 +91,10 @@
         var today = Date.today().toString('yyyy-MM-dd');
         var todays_score = score_data.by_date[today];
         var highscore    = score_data.highscore;
+        var total_score  = score_data.total_score;
+
+        $('#total_score').append('Total score<br><span class="score">' + total_score + '</span>');
+
         $('#day_score').append('Todays score<br><span class="score">' + todays_score + '</span>');
 
         $('#highscore').append('High score<br><span class="score">' + highscore + '</span>');

@@ -23,7 +23,7 @@ class Omniscore
     end
 
     def dump_to_file(filename)
-      scoreboard = { :by_date => {}, :highscore => 0 }
+      scoreboard = { :by_date => {}, :highscore => 0, :total_score => total_score }
 
       scoreboard[:by_date] = day_scores
       scoreboard[:day_scores] = scoreboard[:by_date].sort_by { |date,score| date }.map { |date, score| [date.day,score] }
