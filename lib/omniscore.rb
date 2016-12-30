@@ -1,6 +1,4 @@
 require 'omniscore/match_object'
-require 'omniscore/rules'
-require 'omniscore/score'
 
 require 'omniscore/activities'
 
