@@ -8,7 +8,8 @@ class Activity
 
   def initialize(activity_type, subject, date)
     @subject_id     = subject.id
-    @activity_type  = activity_type.to_sym
+    @subject_type   = subject.class
+    @type           = activity_type.to_sym
     @date           = date
   end
 end
